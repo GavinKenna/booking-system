@@ -2,13 +2,13 @@
   "openapi": "3.0.1",
   "info": {
     "title": "PharmaPod Booking System",
-    "description": "API Integration",
+    "description": "API Integration between PharmaPod and Boots Booking",
     "version": "1.0"
   },
   "servers": [
     {
       "url": "http://example.com/boots/api",
-      "description": "Generated server url"
+      "description": "Non Production Example URL"
     }
   ],
   "paths": {
@@ -50,12 +50,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bookings/{bookingId}": {
@@ -98,12 +93,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
@@ -171,13 +161,6 @@
             "type": "string"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
       }
     }
   }
