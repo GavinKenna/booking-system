@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PharmaPod Booking System",
+    "description": "API Integration between PharmaPod and Boots Booking",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://example.com/boots/api",
+      "description": "Non Production Example URL"
+    }
+  ],
+  "paths": {
+    "/bookings": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Create a new Booking",
+        "operationId": "addBooking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "default response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created Booking",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Incorrect payload passed to endpoint",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings/{bookingId}": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "View a created Booking",
+        "operationId": "getBooking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bookingId",
+            "in": "path",
+            "description": "Id of the Booking you wish to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Bookijng",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource you were trying to reach is not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API",
+        "description": "API Key that will be provided by PharmaPod to make these calls"
+      }
+    },
+    "schemas": {
+      "BookingRequest": {
+        "type": "object",
+        "description": "The Booking object that will be sent when a patient is requesting a new Booking Appointment",
+        "properties": {
+          "patientId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 355,
+            "description": "The unique ID of the Patient Booking"
+          }
+        }
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Unique ID of the Booking object. NOTE - not the Patient Booking ID",
+            "example": 42
+          },
+          "patientId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 355,
+            "description": "The unique ID of the Booking"
+          },
+          "isEligible": {
+            "type": "string",
+            "example": true,
+            "description": "If the Patient is eligible for an appointment. If the patient is still filling out the booking form then the response will be 'undecided'",
+            "enum": [
+              true,
+              false,
+              "undecided"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "The unique URL of the Booking. This will also be returned in the iFrame object",
+            "example": "https://example.com/boots/ui/bookings/42"
+          },
+          "iframe": {
+            "type": "string",
+            "description": "The fully formed iFrame object that can be inserted on any standard HTML page",
+            "example": "<iframe src=\"https://example.com/boots/ui/bookings/42\" name=\"iframe_a\"></iframe>"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
